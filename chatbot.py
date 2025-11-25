@@ -4,6 +4,7 @@ import random
 
 from state import ConversationState
 from corpus import load_full_corpus
+from recipe_manager import RecipeManager
 from smalltalk_intents import SMALLTALK_TEMPLATES
 from nlp_utils import create_stemmer_and_stopwords, ensure_nltk, preprocess_text
 from intent_model import (
@@ -17,12 +18,12 @@ def main():
     # Load small talk corpus
     df = load_full_corpus()
     state = ConversationState()
+    recipes = RecipeManager("recipes.csv")
 
     # Build or load vectoriser/transformer
     vectorizer, transformer = load_vectorizer_and_transformer()
     if vectorizer is None or transformer is None:
-        pass
-        # vectorizer, transformer, corpus_tfidf = build_vectorizer_and_transformer(df)
+        vectorizer, transformer, corpus_tfidf = build_vectorizer_and_transformer(df)
     else:
         # Need to rebuild corpus_tfidf from the current corpus
         stemmer, stop_words = create_stemmer_and_stopwords()
