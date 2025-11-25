@@ -2,7 +2,9 @@
 
 import random
 
-from smalltalk_data import SMALLTALK_TEMPLATES, load_corpus
+from state import ConversationState
+from corpus import load_full_corpus
+from smalltalk_intents import SMALLTALK_TEMPLATES
 from nlp_utils import create_stemmer_and_stopwords, ensure_nltk, preprocess_text
 from intent_model import (
     build_vectorizer_and_transformer,
@@ -13,12 +15,14 @@ from intent_model import (
 
 def main():
     # Load small talk corpus
-    df = load_corpus()
+    df = load_full_corpus()
+    state = ConversationState()
 
     # Build or load vectoriser/transformer
     vectorizer, transformer = load_vectorizer_and_transformer()
     if vectorizer is None or transformer is None:
-        vectorizer, transformer, corpus_tfidf = build_vectorizer_and_transformer(df)
+        pass
+        # vectorizer, transformer, corpus_tfidf = build_vectorizer_and_transformer(df)
     else:
         # Need to rebuild corpus_tfidf from the current corpus
         stemmer, stop_words = create_stemmer_and_stopwords()
@@ -38,25 +42,24 @@ def main():
 
     # Username handshake
     print("Hi, I'm the skeleton small talk chatbot.")
-    username = None
 
-    while username is None:
+    while state.username is None:
         name_try = input("What should I call you? ").strip()
         if not name_try:
             print("I didn't catch that, try again.")
             continue
         confirm = input(f"Did you say '{name_try}'? (y/n) ").strip().lower()
         if confirm in ("y", "yes"):
-            username = name_try
+            state.username = name_try
         else:
             print("Okay, let's try again.")
 
-    print(f"Nice to meet you, {username}!")
+    print(f"Nice to meet you, {state.username}!")
     print("Right now I can have small talk. Ask me something (type 'quit' to exit).")
 
     # Main chat loop
     while True:
-        user_input = input(f"{username}: ").strip()
+        user_input = input(f"{state.username}: ").strip()
         if not user_input:
             continue
 
@@ -74,14 +77,20 @@ def main():
             stop_words,
         )
 
+        proto_q = questions[idx]
+        print(f"[DEBUG] intent={intent}  score={score:.3f}")
+        print(f"[DEBUG] matched prototype: \"{proto_q}\"")
+
         if intent == "unknown":
             print("Bot: I'm not confident I understand that yet.")
             continue
 
+        state.last_intent = intent
+
         # Use templates if we have them
         if intent in SMALLTALK_TEMPLATES:
             template = random.choice(SMALLTALK_TEMPLATES[intent])
-            response = template.replace("{name}", username)
+            response = template.replace("{name}", state.username)
             print("Bot:", response)
             continue
 
