@@ -4,6 +4,7 @@ import random
 
 from state import ConversationState
 from corpus import load_full_corpus
+from handlers.handle_recipe_search_ingredient import handle_recipe_search_ingredient
 from recipe_manager import RecipeManager
 from smalltalk_intents import SMALLTALK_TEMPLATES
 from nlp_utils import create_stemmer_and_stopwords, ensure_nltk, preprocess_text
@@ -94,8 +95,13 @@ def main():
             response = template.replace("{name}", state.username)
             print("Bot:", response)
             continue
+        
+        if intent == "recipe_search_ingredient":
+            response = handle_recipe_search_ingredient(user_input, state, recipes)
+            print("Bot:", response)
+            continue
 
-        # Fallback to default answer from dataset
+        # Fallback to default answer from datasety
         print("Bot:", answers[idx])
 
 

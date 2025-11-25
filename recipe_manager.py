@@ -65,7 +65,7 @@ class RecipeManager:
         """
         Search recipes that contain any of the ingredient keywords
         mentioned by the user, then filter by:
-        - state.dietary_prefs   (e.g. "vegan", "vegetarian")
+        - state.dietary_pref    (e.g. {"vegan", "vegetarian"})
         - state.disliked_ingredients (list of strings)
 
         Returns: a list of recipe names.
@@ -85,17 +85,21 @@ class RecipeManager:
         filtered = df[mask]
 
         # --- Filter by dietary preference, if set ---
-        pref = getattr(state, "dietary_prefs", None)
-        if pref:
-            pref = pref.lower()
-            # e.g. tags_lower: "vegetarian; high protein"
-            filtered = filtered[filtered["tags_lower"].str.contains(pref)]
+        prefs = getattr(state, "dietary_pref", set()) or set()
+        if prefs:
+            # require all selected diet keywords to appear in tags_lower
+            for pref in prefs:
+                filtered = filtered[
+                    filtered["tags_lower"].str.contains(pref.lower(), na=False)
+                ]
 
         # --- Filter out disliked ingredients, if any ---
         dislikes = getattr(state, "disliked_ingredients", []) or []
         for bad in dislikes:
             bad = bad.lower()
-            filtered = filtered[~filtered["ingredients_lower"].str.contains(bad)]
+            filtered = filtered[
+                ~filtered["ingredients_lower"].str.contains(bad, na=False, regex=False)
+            ]
 
         # Return just recipe names as a simple list
         return filtered["recipe_name"].tolist()
