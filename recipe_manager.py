@@ -10,7 +10,6 @@ class RecipeManager:
     def _prepare_dataframe(self):
         df = self.df
 
-        # Adjust these names if your CSV uses different headers
         df["ingredients_lower"] = df["ingredients"].str.lower()
         df["tags_lower"] = df["tags"].str.lower()
         df["cuisine_lower"] = df["cuisine"].str.lower()
@@ -24,6 +23,14 @@ class RecipeManager:
             + " "
             + df["cuisine_lower"]
         )
+
+    def get_recipe_by_name(self, recipe_name: str):
+        """Return the full row for a recipe name, or None if not found."""
+        mask = self.df["recipe_name"].str.lower() == recipe_name.lower() # compares each row to see if the names match
+        matches = self.df[mask] # self.df[mask] is only the rows where the names match i.e. the last line made it = True
+        if matches.empty:
+            return None
+        return matches.iloc[0]
 
     def _build_ingredient_tokens(self):
         tokens = set()

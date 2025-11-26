@@ -5,6 +5,7 @@ import random
 from state import ConversationState
 from corpus import load_full_corpus
 from handlers.handle_recipe_search_ingredient import handle_recipe_search_ingredient
+from handlers.handle_recipe_details import handle_recipe_details
 from recipe_manager import RecipeManager
 from smalltalk_intents import SMALLTALK_TEMPLATES
 from nlp_utils import create_stemmer_and_stopwords, ensure_nltk, preprocess_text
@@ -19,7 +20,7 @@ def main():
     # Load small talk corpus
     df = load_full_corpus()
     state = ConversationState()
-    recipes = RecipeManager("recipes.csv")
+    recipe_manager = RecipeManager("recipes.csv")
 
     # Build or load vectoriser/transformer
     vectorizer, transformer = load_vectorizer_and_transformer()
@@ -66,7 +67,7 @@ def main():
             continue
 
         if user_input.lower() in {"quit", "exit", "bye"}:
-            print("Bot: Goodbye!")
+            print("MealMate: Goodbye!")
             break
 
         intent, idx, score = match_intent(
@@ -79,12 +80,12 @@ def main():
             stop_words,
         )
 
-        proto_q = questions[idx]
-        print(f"[DEBUG] intent={intent}  score={score:.3f}")
-        print(f"[DEBUG] matched prototype: \"{proto_q}\"")
+        # proto_q = questions[idx]
+        # print(f"[DEBUG] intent={intent}  score={score:.3f}")
+        # print(f"[DEBUG] matched prototype: \"{proto_q}\"")
 
         if intent == "unknown":
-            print("Bot: I'm not confident I understand that yet.")
+            print("MealMate: I'm not confident I understand that yet.")
             continue
 
         state.last_intent = intent
@@ -93,16 +94,21 @@ def main():
         if intent in SMALLTALK_TEMPLATES:
             template = random.choice(SMALLTALK_TEMPLATES[intent])
             response = template.replace("{name}", state.username)
-            print("Bot:", response)
+            print("MealMate:", response)
             continue
         
         if intent == "recipe_search_ingredient":
-            response = handle_recipe_search_ingredient(user_input, state, recipes)
-            print("Bot:", response)
+            response = handle_recipe_search_ingredient(user_input, state, recipe_manager)
+            print("MealMate:", response)
+            continue
+
+        if intent == "recipe_details":
+            response = handle_recipe_details(state, recipe_manager)
+            print("MealMate:", response)
             continue
 
         # Fallback to default answer from datasety
-        print("Bot:", answers[idx])
+        print("MealMate:", answers[idx])
 
 
 if __name__ == "__main__":
