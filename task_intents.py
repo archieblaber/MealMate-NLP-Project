@@ -310,6 +310,21 @@ def build_task_intents_dataframe():
             "Intent": "recipe_more",
         },
         {
+            "Question": "another",
+            "Answer": "",
+            "Intent": "recipe_more",
+        },
+        {
+            "Question": "give me another one",
+            "Answer": "",
+            "Intent": "recipe_more",
+        },
+        {
+            "Question": "next recipe",
+            "Answer": "",
+            "Intent": "recipe_more",
+        },
+        {
             "Question": "can I have more ideas",
             "Answer": "",
             "Intent": "recipe_more",

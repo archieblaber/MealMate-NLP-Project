@@ -6,6 +6,10 @@ from state import ConversationState
 from corpus import load_full_corpus
 from handlers.handle_recipe_search_ingredient import handle_recipe_search_ingredient
 from handlers.handle_recipe_details import handle_recipe_details
+from handlers.handle_recipe_more import handle_recipe_more
+from handlers.handle_shopping_add import handle_shopping_add
+from handlers.handle_shopping_show import handle_shopping_show
+from handlers.handle_shopping_clear import handle_shopping_clear
 from recipe_manager import RecipeManager
 from smalltalk_intents import SMALLTALK_TEMPLATES
 from nlp_utils import create_stemmer_and_stopwords, ensure_nltk, preprocess_text
@@ -104,6 +108,24 @@ def main():
 
         if intent == "recipe_details":
             response = handle_recipe_details(state, recipe_manager)
+            print("MealMate:", response)
+            continue
+
+        if intent == "recipe_more":
+            response = handle_recipe_more(state, recipe_manager)
+            print("MealMate:", response)
+            continue
+        
+        if intent == "shopping_add":
+            response = handle_shopping_add(user_input, state, recipe_manager)
+            print("MealMate:", response)
+            continue
+        if intent == "shopping_show":
+            response = handle_shopping_show(state)
+            print("MealMate:", response)
+            continue
+        if intent == "shopping_clear":
+            response = handle_shopping_clear(state)
             print("MealMate:", response)
             continue
 

@@ -20,11 +20,6 @@ SMALLTALK_TEMPLATES = {
         "Anytime!",
         "No problem at all."
     ],
-    "what_can_you_do": [
-        "Right now I can have small talk, and soon I’ll help you with meal planning and recipes.",
-        "I support small talk for now, and I’ll later help with recipes and shopping lists.",
-        "At the moment I just do chit-chat, but I’m being upgraded into a meal assistant."
-    ],
     "what_is_my_name": [
         "Your name is {name}.",
         "You told me you are {name}.",
@@ -75,11 +70,6 @@ def build_smalltalk_dataframe():
             "Question": "thanks",
             "Answer": "No worries!",
             "Intent": "thanks",
-        },
-        {
-            "Question": "what can you do",
-            "Answer": "I can do small talk.",
-            "Intent": "what_can_you_do",
         },
         {
             "Question": "what is my name",
