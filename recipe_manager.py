@@ -2,7 +2,7 @@
 import pandas as pd
 
 class RecipeManager:
-    def __init__(self, csv_path: str):
+    def __init__(self, csv_path):
         self.df = pd.read_csv(csv_path)
         self._prepare_dataframe()
         self._build_ingredient_tokens()
@@ -24,7 +24,7 @@ class RecipeManager:
             + df["cuisine_lower"]
         )
 
-    def get_recipe_by_name(self, recipe_name: str):
+    def get_recipe_by_name(self, recipe_name):
         """Return the full row for a recipe name, or None if not found."""
         mask = self.df["recipe_name"].str.lower() == recipe_name.lower() # compares each row to see if the names match
         matches = self.df[mask] # self.df[mask] is only the rows where the names match i.e. the last line made it = True

@@ -10,6 +10,7 @@ from handlers.handle_recipe_more import handle_recipe_more
 from handlers.handle_shopping_add import handle_shopping_add
 from handlers.handle_shopping_show import handle_shopping_show
 from handlers.handle_shopping_clear import handle_shopping_clear
+from handlers.handle_help import handle_help
 from recipe_manager import RecipeManager
 from smalltalk_intents import SMALLTALK_TEMPLATES
 from nlp_utils import create_stemmer_and_stopwords, ensure_nltk, preprocess_text
@@ -126,6 +127,10 @@ def main():
             continue
         if intent == "shopping_clear":
             response = handle_shopping_clear(state)
+            print("MealMate:", response)
+            continue
+        if intent == "help":
+            response = handle_help(state)
             print("MealMate:", response)
             continue
 

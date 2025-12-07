@@ -6,7 +6,7 @@ from random import randint
 from recipe_summary_templates import RECIPE_SUMMARY_TEMPLATES
 
 
-def handle_recipe_search_ingredient(user_text, state: ConversationState, recipe_manager: RecipeManager):
+def handle_recipe_search_ingredient(user_text, state, recipe_manager):
 
     recipes = recipe_manager.search_by_ingredient(user_text, state)
 
@@ -43,7 +43,7 @@ def handle_recipe_search_ingredient(user_text, state: ConversationState, recipe_
     lines = []
     lines.append(summary_text)
 
-    # explain filtering (good for the report)
+    # explain filtering
     if state.dietary_pref or state.disliked_ingredients:
         filter_bits = []
         if state.dietary_pref:
