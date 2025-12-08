@@ -11,8 +11,11 @@ from handlers.handle_shopping_add import handle_shopping_add
 from handlers.handle_shopping_show import handle_shopping_show
 from handlers.handle_shopping_clear import handle_shopping_clear
 from handlers.handle_shopping_remove import handle_shopping_remove
+from handlers.handle_add_dislike import handle_add_dislike
+from handlers.handle_set_diet import handle_set_diet
 from handlers.handle_help import handle_help
 from handlers.handle_shopping_place_order import handle_shopping_place_order
+from handlers.handle_show_prefs import handle_show_prefs
 from recipe_manager import RecipeManager
 from smalltalk_intents import SMALLTALK_TEMPLATES
 from nlp_utils import create_stemmer_and_stopwords, ensure_nltk, preprocess_text
@@ -137,6 +140,18 @@ def main():
             continue
         if intent == "shopping_place_order":
             response = handle_shopping_place_order(state)
+            print("MealMate:", response)
+            continue
+        if intent == "add_dislike":
+            response = handle_add_dislike(user_input, state)
+            print("MealMate:", response)
+            continue
+        if intent == "show_prefs":
+            response = handle_show_prefs(state)
+            print("MealMate:", response)
+            continue
+        if intent == "set_diet":
+            response = handle_set_diet(user_input, state)
             print("MealMate:", response)
             continue
         if intent == "help":

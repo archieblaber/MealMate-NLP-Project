@@ -1,7 +1,6 @@
 # handlers/handle_shopping_add.py
 
 from state import ConversationState
-from recipe_manager import RecipeManager
 
 
 # Words that are not ingredients
@@ -12,33 +11,25 @@ FILLER_WORDS = {
 }
 
 
-def _extract_freeform_ingredients(user_text, recipe_manager):
+def _extract_freeform_ingredients(user_text):
     """
-    Extract 'free-form' ingredients from the user's text:
-    - words that are not filler
-    - and not already known ingredient base tokens from the dataset.
-
-    Example:
-      user_text: "add apples and chicken to my shopping list"
-      base tokens in dataset might include 'chicken', 'rice', ...
-      -> freeform: ['apples']
+    Extract ingredients from the user's text by:
+    - converting to lowercase,
+    - replacing ' and ' with commas,
+    - splitting on commas,
+    - removing filler words and very short tokens,
+    - returning a list of cleaned ingredient phrases.
     """
-    text = user_text.lower().replace(",", " ")
-    words = text.split()
-
+    text = user_text.lower().replace(" and ", ",")
+    raw_segments = text.split(",")
     freeform = []
 
-    for w in words:
-        if w in FILLER_WORDS:
-            continue
-        # Skip if it's already a known ingredient base token
-        if w in getattr(recipe_manager, "base_ingredient_tokens", set()):
-            continue
-        # Skip very short tokens
-        if len(w) <= 2:
-            continue
-        if w not in freeform:
-            freeform.append(w)
+    for segment in raw_segments:
+        tokens = segment.strip().split()
+        filtered_tokens = [t for t in tokens if t not in FILLER_WORDS and len(t) > 2]
+        phrase = " ".join(filtered_tokens)
+        if phrase and phrase not in freeform:
+            freeform.append(phrase)
 
     return freeform
 
@@ -103,37 +94,27 @@ def _add_full_recipe_to_list(state, recipe_manager):
 def handle_shopping_add(user_text, state, recipe_manager):
     """
     Handle things like:
-      - "add that recipe to my shopping list"
-      - "add chicken and rice to my shopping list"
+      - "add chicken breast, lemons and olive oil"
       - "add apples"
-      - "put apples and pasta on my list"
+      - "add that recipe to my shopping list"
 
     Logic:
-      1) Try to extract known ingredients from the dataset (chicken, beef, pasta, etc.)
-      2) Try to extract extra free-form ingredients (like 'apples')
-      3) If we found any ingredients:
+      1) Try to extract free-form ingredients from the user's text
+         (e.g. "chicken breast", "lemons", "olive oil", "apples")
+      2) If we found any ingredients:
          - add them directly to the shopping list
-      4) Otherwise, if there's a last_recipe:
+      3) Otherwise, if there's a last_recipe:
          - add the whole recipe's ingredients
-      5) If nothing to add and no recipe:
+      4) If nothing to add and no recipe:
          - tell the user how to phrase things.
     """
 
-    # 1. Ingredients known from the dataset (expanded phrases like "chicken breast")
-    known_from_dataset = recipe_manager.extract_ingredient_keywords(user_text)
+    # 1. Extract free-form ingredients (e.g. "apples")
+    freeform_ings = _extract_freeform_ingredients(user_text)
 
-    # 2. Extra free-form ingredients (e.g. "apples")
-    freeform_ings = _extract_freeform_ingredients(user_text, recipe_manager)
-
-    # CASE A: user explicitly named ingredients (dataset and/or free-form)
-    if known_from_dataset or freeform_ings:
-        items_to_add = []
-
-        # Use full ingredient phrases for matched dataset ingredients
-        items_to_add.extend(known_from_dataset)
-
-        # Add free-form ones as-is
-        items_to_add.extend(freeform_ings)
+    # CASE A: user explicitly named ingredients (free-form only)
+    if freeform_ings:
+        items_to_add = freeform_ings
 
         added_count, preview = _add_items_to_shopping_list(items_to_add, state)
 
@@ -143,23 +124,10 @@ def handle_shopping_add(user_text, state, recipe_manager):
                 f"Recent items on your list: {preview}"
             )
 
-        # Build a slightly more detailed message depending on what we added
-        parts = []
-        if known_from_dataset:
-            parts.append(
-                f"from your recipes: {', '.join(known_from_dataset)}"
-            )
-        if freeform_ings:
-            parts.append(
-                f"as extra items: {', '.join(freeform_ings)}"
-            )
-
-        detail = " and ".join(parts)
-
         return (
             f"I've added {added_count} new item"
             f"{'s' if added_count != 1 else ''} to your shopping list "
-            f"({detail}).\n"
+            f"({', '.join(items_to_add)}).\n"
             f"Recent items on your list: {preview}\n"
             'You can say "show me my shopping list" to see everything.'
         )
