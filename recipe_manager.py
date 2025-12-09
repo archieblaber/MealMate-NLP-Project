@@ -25,9 +25,8 @@ class RecipeManager:
         )
 
     def get_recipe_by_name(self, recipe_name):
-        """Return the full row for a recipe name, or None if not found."""
-        mask = self.df["recipe_name"].str.lower() == recipe_name.lower() # compares each row to see if the names match
-        matches = self.df[mask] # self.df[mask] is only the rows where the names match i.e. the last line made it = True
+        mask = self.df["recipe_name"].str.lower() == recipe_name.lower()
+        matches = self.df[mask]
         if matches.empty:
             return None
         return matches.iloc[0]
@@ -54,12 +53,10 @@ class RecipeManager:
 
         found = set()
 
-        # 1. match exact base words like "beef", "pork", "chicken"
         for w in words:
             if w in self.base_ingredient_tokens:
                 found.add(w)
 
-        # 2. match full ingredient entries that contain those words
         expanded = set()
         for f in found:
             for ingredient in self.ingredient_tokens:
@@ -68,18 +65,28 @@ class RecipeManager:
 
         return list(expanded)
 
-    def search_by_ingredient(self, user_text: str, state):
+    def extract_cuisine_keywords(self, user_text):
+        text = user_text.lower()
+        cuisines = set(self.df["cuisine_lower"].dropna().unique())
+
+        found = []
+        for c in cuisines:
+            if c and c in text:
+                found.append(c)
+
+        return found
+
+    def search_by_cuisine(self, user_text, state):
         """
-        Search recipes that contain any of the ingredient keywords
-        mentioned by the user, then filter by:
-        - state.dietary_pref    (e.g. {"vegan", "vegetarian"})
+        Search recipes that match cuisine keywords mentioned by the user,
+        then filter by:
+        - state.dietary_pref (e.g. {"vegan", "vegetarian"})
         - state.disliked_ingredients (list of strings)
 
         Returns: a list of recipe names.
         """
-        keywords = self.extract_ingredient_keywords(user_text)
+        keywords = self.extract_cuisine_keywords(user_text)
 
-        # If no explicit ingredient word recognised, just give up
         if not keywords:
             return []
 
@@ -87,20 +94,17 @@ class RecipeManager:
 
         mask = pd.Series(False, index=df.index)
         for kw in keywords:
-            mask |= df["ingredients_lower"].str.contains(kw, na=False) # only keep rows where an ingredient appears
+            mask |= df["cuisine_lower"].str.contains(kw, na=False)
 
         filtered = df[mask]
 
-        # --- Filter by dietary preference, if set ---
         prefs = getattr(state, "dietary_pref", set()) or set()
         if prefs:
-            # require all selected diet keywords to appear in tags_lower
             for pref in prefs:
                 filtered = filtered[
                     filtered["tags_lower"].str.contains(pref.lower(), na=False)
                 ]
 
-        # --- Filter out disliked ingredients, if any ---
         dislikes = getattr(state, "disliked_ingredients", []) or []
         for bad in dislikes:
             bad = bad.lower()
@@ -108,18 +112,62 @@ class RecipeManager:
                 ~filtered["ingredients_lower"].str.contains(bad, na=False, regex=False)
             ]
 
-        # Return just recipe names as a simple list
+        return filtered["recipe_name"].tolist()
+    
+    def search_quick(self, user_text, state):
+        text = user_text.lower()
+
+        limit = 20
+
+        df = self.df
+
+        time_col = pd.to_numeric(df["time_to_cook_min"], errors="coerce")
+
+        mask = time_col <= limit
+        filtered = df[mask]
+
+        prefs = getattr(state, "dietary_pref", set()) or set()
+        if prefs:
+            for pref in prefs:
+                filtered = filtered[
+                    filtered["tags_lower"].str.contains(pref.lower(), na=False)
+                ]
+
+        dislikes = getattr(state, "disliked_ingredients", []) or []
+        for bad in dislikes:
+            bad = bad.lower()
+            filtered = filtered[
+                ~filtered["ingredients_lower"].str.contains(bad, na=False, regex=False)
+            ]
+
         return filtered["recipe_name"].tolist()
 
+    def search_by_ingredient(self, user_text: str, state):
+        keywords = self.extract_ingredient_keywords(user_text)
 
-# For quick manual testing
-# if __name__ == "__main__":
-#     from state import ConversationState
+        if not keywords:
+            return []
 
-#     state = ConversationState()
-#     state.dietary_prefs = None
-#     state.disliked_ingredients = ["mushrooms"]
+        df = self.df
 
-#     manager = RecipeManager("recipes.csv")
-#     recipes = manager.search_by_ingredient("I want a pasta dinner", state)
-#     print(recipes)
+        mask = pd.Series(False, index=df.index)
+        for kw in keywords:
+            mask |= df["ingredients_lower"].str.contains(kw, na=False)
+
+        filtered = df[mask]
+
+        prefs = getattr(state, "dietary_pref", set()) or set()
+        if prefs:
+            for pref in prefs:
+                filtered = filtered[
+                    filtered["tags_lower"].str.contains(pref.lower(), na=False)
+                ]
+
+        dislikes = getattr(state, "disliked_ingredients", []) or []
+        for bad in dislikes:
+            bad = bad.lower()
+            filtered = filtered[
+                ~filtered["ingredients_lower"].str.contains(bad, na=False, regex=False)
+            ]
+
+        return filtered["recipe_name"].tolist()

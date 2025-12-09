@@ -8,8 +8,6 @@ from recipe_summary_templates import RECIPE_SUMMARY_TEMPLATES
 
 def handle_recipe_more(state, recipe_manager):
 
-
-    # 1. Check we have any previous search
     if not state.last_recipe_list or len(state.last_recipe_list) == 0:
         return (
             "I don't have any recipes in mind yet.\n"
@@ -18,7 +16,6 @@ def handle_recipe_more(state, recipe_manager):
 
     recipes = state.last_recipe_list
 
-    # 2. Move to the next recipe in the list (wrap around if needed)
     current_idx = state.last_recipe_index or 0
     next_idx = (current_idx + 1) % len(recipes)
 
@@ -26,7 +23,6 @@ def handle_recipe_more(state, recipe_manager):
     state.last_recipe = recipes[next_idx]
     recipe_name = state.last_recipe
 
-    # 3. Look up full row
     row = recipe_manager.get_recipe_by_name(recipe_name)
     if row is None:
         return (
@@ -38,7 +34,6 @@ def handle_recipe_more(state, recipe_manager):
     cuisine = row["cuisine"]
     time_min = row["time_to_cook_min"]
 
-    # 4. Build a summary line using the same template style
     template = RECIPE_SUMMARY_TEMPLATES[
         randint(0, len(RECIPE_SUMMARY_TEMPLATES) - 1)
     ]
@@ -52,7 +47,6 @@ def handle_recipe_more(state, recipe_manager):
     lines = []
     lines.append(summary_text)
 
-    # 5. Mention filtering
     if state.dietary_pref or state.disliked_ingredients:
         filter_bits = []
         if state.dietary_pref:
@@ -61,11 +55,10 @@ def handle_recipe_more(state, recipe_manager):
             filter_bits.append("avoiding: " + ", ".join(state.disliked_ingredients))
         lines.append(f"(Filtered based on your preferences: {', '.join(filter_bits)})")
 
-    # 6. Remind them of next options
     lines.append("")
     lines.append("You can ask me:")
-    lines.append("• \"tell me more about that recipe\"")
-    lines.append("• \"show me another recipe\"")
-    lines.append("• \"add that recipe to my shopping list\"")
+    lines.append("- \"tell me more about that recipe\"")
+    lines.append("- \"show me another recipe\"")
+    lines.append("- \"add that recipe to my shopping list\"")
 
     return "\n".join(lines)

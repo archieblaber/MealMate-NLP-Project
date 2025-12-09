@@ -93,12 +93,12 @@ def build_task_intents_dataframe():
             "Intent": "recipe_search_quick",
         },
         {
-            "Question": "what can I make in 15 minutes",
+            "Question": "what can I make in 15 20 minutes",
             "Answer": "",
             "Intent": "recipe_search_quick",
         },
         {
-            "Question": "I have more time give me a slow cook recipe",
+            "Question": "show me a quick recipe",
             "Answer": "",
             "Intent": "recipe_search_quick",
         },
@@ -108,6 +108,16 @@ def build_task_intents_dataframe():
         # =========================
         {
             "Question": "show me Italian recipes",
+            "Answer": "",
+            "Intent": "recipe_search_cuisine",
+        },
+        {
+            "Question": "show me Chinese recipes",
+            "Answer": "",
+            "Intent": "recipe_search_cuisine",
+        },
+        {
+            "Question": "show me Mexican recipes",
             "Answer": "",
             "Intent": "recipe_search_cuisine",
         },
@@ -133,7 +143,7 @@ def build_task_intents_dataframe():
         },
 
         # =========================
-        # SHOPPING LIST – ADD
+        # SHOPPING LIST - ADD
         # =========================
         {
             "Question": "add the ingredients for that recipe to my shopping list",
@@ -157,7 +167,7 @@ def build_task_intents_dataframe():
         },
 
         # =========================
-        # SHOPPING LIST – SHOW
+        # SHOPPING LIST - SHOW
         # =========================
         {
             "Question": "show me my shopping list",
@@ -176,7 +186,7 @@ def build_task_intents_dataframe():
         },
 
         # =========================
-        # SHOPPING LIST – CLEAR / REMOVE
+        # SHOPPING LIST - CLEAR / REMOVE
         # =========================
         {
             "Question": "clear my shopping list",
@@ -200,7 +210,7 @@ def build_task_intents_dataframe():
         },
 
         # =========================
-        # SHOPPING LIST – PLACE ORDER (SIMULATED)
+        # SHOPPING LIST - PLACE ORDER (SIMULATED)
         # =========================
         {
             "Question": "place my grocery order",
@@ -219,7 +229,7 @@ def build_task_intents_dataframe():
         },
 
         # =========================
-        # USER PROFILE – DIETARY PREFERENCES
+        # USER PROFILE - DIETARY PREFERENCES
         # =========================
         {
             "Question": "I am vegetarian",
@@ -254,7 +264,7 @@ def build_task_intents_dataframe():
 
 
         # =========================
-        # USER PROFILE – DISLIKED INGREDIENTS
+        # USER PROFILE - DISLIKED INGREDIENTS
         # =========================
         {
             "Question": "I do not like ",
@@ -278,7 +288,7 @@ def build_task_intents_dataframe():
         },
 
         # =========================
-        # USER PROFILE – SHOW PREFERENCES
+        # USER PROFILE - SHOW PREFERENCES
         # =========================
         {
             "Question": "what are my dietary preferences",
@@ -297,7 +307,7 @@ def build_task_intents_dataframe():
         },
 
         # =========================
-        # CONTEXTUAL FOLLOW UPS – MORE / DETAILS
+        # CONTEXTUAL FOLLOW UPS - MORE / DETAILS
         # =========================
         {
             "Question": "show me another recipe like that",
@@ -350,11 +360,6 @@ def build_task_intents_dataframe():
         },
         {
             "Question": "what can you do for me",
-            "Answer": "",
-            "Intent": "help",
-        },
-        {
-            "Question": "explain your features",
             "Answer": "",
             "Intent": "help",
         },

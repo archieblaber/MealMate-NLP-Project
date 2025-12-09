@@ -4,40 +4,40 @@ import random
 
 TAG_NOTE_OPTIONS = {
     "high protein": [
-        "It’s a great choice if you're looking to boost protein.",
-        "Perfect if you want something protein‑rich.",
+        "It's a great choice if you're looking to boost protein.",
+        "Perfect if you want something protein-rich.",
         "A strong option for keeping your protein intake high."
     ],
     "low carb": [
         "Ideal if you're keeping your carb intake low.",
-        "A fitting option for low‑carb eating.",
+        "A fitting option for low-carb eating.",
         "Good pick if you're reducing carbohydrates."
     ],
     "vegetarian": [
-        "A solid vegetarian‑friendly dish.",
+        "A solid vegetarian-friendly dish.",
         "Perfect if you're avoiding meat.",
-        "A nice option for plant‑focused eating."
+        "A nice option for plant-focused eating."
     ],
     "vegan": [
-        "Completely plant‑based and vegan‑friendly.",
+        "Completely plant-based and vegan-friendly.",
         "Suitable if you avoid all animal products.",
         "A strong vegan option to consider."
     ],
     "gluten free": [
         "Suitable if you need to avoid gluten.",
-        "A dependable choice for gluten‑free eating.",
-        "Ideal if you’re steering clear of gluten."
+        "A dependable choice for gluten-free eating.",
+        "Ideal if you're steering clear of gluten."
     ],
     "default": [
         "A flexible dish that suits many preferences.",
-        "A general‑purpose meal most people enjoy.",
+        "A general-purpose meal most people enjoy.",
         "A versatile recipe that fits a range of diets."
     ]
 }
 
 DIFFICULTY_NOTE_OPTIONS = {
     "easy": [
-        "Straightforward and beginner‑friendly.",
+        "Straightforward and beginner-friendly.",
         "Simple to prepare with minimal hassle.",
         "Great for someone who wants an easy cook."
     ],
@@ -62,12 +62,12 @@ TIME_NOTE_OPTIONS = [
     (20, [
         "Perfect when you want something fast.",
         "Ideal for a quick meal with little waiting.",
-        "Great if you don’t have much time to cook."
+        "Great if you don't have much time to cook."
     ]),
     (40, [
         "A comfortable cooking time for most evenings.",
         "Great for a relaxed weekday dinner.",
-        "Good when you don’t want to rush or take too long."
+        "Good when you don't want to rush or take too long."
     ]),
     (9999, [
         "Ideal for when you prefer an unhurried cook.",
@@ -84,7 +84,6 @@ def build_recipe_notes(row):
     difficulty = str(row["difficulty"]).lower()
     time_min = int(row["time_to_cook_min"])
 
-    # tag note
     tag_key = "default"
     for key in TAG_NOTE_OPTIONS.keys():
         if key != "default" and key in tags:
@@ -92,11 +91,9 @@ def build_recipe_notes(row):
             break
     notes.append(random.choice(TAG_NOTE_OPTIONS[tag_key]))
 
-    # difficulty note
     diff_key = difficulty if difficulty in DIFFICULTY_NOTE_OPTIONS else "default"
     notes.append(random.choice(DIFFICULTY_NOTE_OPTIONS[diff_key]))
 
-    # time note
     for threshold, options in TIME_NOTE_OPTIONS:
         if time_min <= threshold:
             notes.append(random.choice(options))

@@ -1,27 +1,24 @@
-# handlers/handle_recipe_search_ingredient.py
+# handlers/handle_recipe_search_quick.py
 
-from recipe_manager import RecipeManager
-from state import ConversationState
 from random import randint
 from recipe_summary_templates import RECIPE_SUMMARY_TEMPLATES
 
 
-def handle_recipe_search_ingredient(user_text, state, recipe_manager):
+def handle_recipe_search_quick(user_text, state, recipe_manager):
 
-    recipes = recipe_manager.search_by_ingredient(user_text, state)
+    recipes = recipe_manager.search_quick(user_text, state)
 
     if not recipes:
         return (
-            "I couldn't find any recipes matching that ingredient, given your preferences.\n"
-            "Try mentioning a clearer ingredient, like 'beef', 'pasta', or 'tofu'."
+            "I couldn't find any quick recipes that fit your preferences.\n"
+            "You could try relaxing your diet or dislikes, or just say "
+            "\"show me a recipe\" for any time length."
         )
-    
+
     recipe_index = randint(0, len(recipes) - 1)
 
     state.last_recipe_list = recipes
-
     state.last_recipe_index = recipe_index
-
     top_recipe = state.last_recipe = recipes[recipe_index]
 
     row = recipe_manager.get_recipe_by_name(top_recipe)
@@ -34,16 +31,15 @@ def handle_recipe_search_ingredient(user_text, state, recipe_manager):
         name=top_recipe,
         difficulty=difficulty,
         cuisine=cuisine,
-        time=time_min
+        time=time_min,
     )
 
-    lines = []
-    lines.append(summary_text)
+    lines = [summary_text]
 
     if state.dietary_pref or state.disliked_ingredients:
         filter_bits = []
         if state.dietary_pref:
-            filter_bits.append(f"diet: {', '.join(state.dietary_pref)}")
+            filter_bits.append("diet: " + ", ".join(state.dietary_pref))
         if state.disliked_ingredients:
             filter_bits.append("avoiding: " + ", ".join(state.disliked_ingredients))
         lines.append(f"(Filtered based on your preferences: {', '.join(filter_bits)})")

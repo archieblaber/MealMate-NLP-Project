@@ -2,20 +2,14 @@
 
 from state import ConversationState
 
-def handle_shopping_clear(state: ConversationState) -> str:
-    """
-    Clears the user's entire shopping list.
-    Triggered by intents like:
-      - "clear my shopping list"
-      - "empty my shopping list"
-    """
+def handle_shopping_clear(state):
 
     if not state.shopping_list:
         return (
             "Your shopping list is already empty.\n"
             "You can add items by saying things like:\n"
-            "• \"add chicken\"\n"
-            "• \"add that recipe to my shopping list\""
+            "- \"add chicken\"\n"
+            "- \"add that recipe to my shopping list\""
         )
 
     state.shopping_list.clear()

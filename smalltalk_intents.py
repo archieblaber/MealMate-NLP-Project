@@ -23,23 +23,20 @@ SMALLTALK_TEMPLATES = {
     "what_is_my_name": [
         "Your name is {name}.",
         "You told me you are {name}.",
-        "Of course, you’re {name}!"
+        "Of course, you're {name}!"
     ],
     "what_is_your_name": [
         "I'm the skeleton chatbot!",
         "My name is Skeleton Chatbot.",
         "You can call me the skeleton chatbot."
     ],
+    "my_name_is": [
+        "Alright, I will call you {name}!"
+    ]
 }
 
 
 def build_smalltalk_dataframe():
-    """
-    Build a small talk corpus as a DataFrame with:
-    - Question: prototype user utterance
-    - Answer: a default answer (used only as fallback)
-    - Intent: intent label used for matching + templates
-    """
     rows = [
         {
             "Question": "hello",
@@ -81,15 +78,16 @@ def build_smalltalk_dataframe():
             "Answer": "I'm the skeleton chatbot!",
             "Intent": "what_is_your_name",
         },
+        {
+            "Question": "call me ",
+            "Answer": "",
+            "Intent": "my_name_is",
+        },
     ]
 
     return pd.DataFrame(rows)
 
 
 def load_corpus():
-    """
-    For now, our entire corpus is just the small talk dataset.
-    (No external QA CSV.)
-    """
     df = build_smalltalk_dataframe()
     return df

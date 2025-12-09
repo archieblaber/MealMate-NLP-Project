@@ -1,10 +1,6 @@
 # handlers/handle_shopping_place_order.py
 
 def handle_shopping_place_order(state):
-    """
-    Placing a shopping order based on the current shopping_list.
-    Does NOT clear the list automatically (so we don't surprise the user).
-    """
 
     if not state.shopping_list:
         return (
@@ -12,7 +8,6 @@ def handle_shopping_place_order(state):
             "First add some ingredients, then you can ask me to place your order."
         )
 
-    # Deduplicate while preserving order
     seen = set()
     unique_items = []
     for item in state.shopping_list:
@@ -20,7 +15,6 @@ def handle_shopping_place_order(state):
             seen.add(item)
             unique_items.append(item)
 
-    # Build a readable bullet list
     if len(unique_items) == 1:
         items_text = f"- {unique_items[0]}"
     else:
@@ -33,8 +27,8 @@ def handle_shopping_place_order(state):
     lines.append(items_text)
     lines.append("")
     lines.append("If you want, you can now say:")
-    lines.append("• \"clear my shopping list\"")
-    lines.append("• \"show me my shopping list\"")
-    lines.append("• \"find me another recipe\"")
+    lines.append("- \"clear my shopping list\"")
+    lines.append("- \"show me my shopping list\"")
+    lines.append("- \"find me another recipe\"")
 
     return "\n".join(lines)

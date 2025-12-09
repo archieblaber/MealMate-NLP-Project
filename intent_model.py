@@ -11,12 +11,6 @@ from nlp_utils import preprocess_text, create_stemmer_and_stopwords
 
 
 def build_vectorizer_and_transformer(df):
-    """
-    Build CountVectorizer + TfidfTransformer on the smalltalk corpus.
-    Save them via joblib.
-    Returns:
-        vectorizer, transformer, corpus_tfidf
-    """
     stemmer, stop_words = create_stemmer_and_stopwords()
 
     processed_questions = [
@@ -37,10 +31,6 @@ def build_vectorizer_and_transformer(df):
 
 
 def load_vectorizer_and_transformer():
-    """
-    Load previously saved vectoriser and transformer.
-    Returns (vectorizer, transformer) or (None, None) if missing.
-    """
     if not (os.path.exists(VECTORIZER_PATH) and os.path.exists(TFIDF_TRANSFORMER_PATH)):
         return None, None
     vectorizer = load(VECTORIZER_PATH)
@@ -58,11 +48,7 @@ def match_intent(
     stop_words,
     threshold=0.15,
 ):
-    """
-    Vectorise user input with existing vectoriser + transformer
-    and compute cosine similarity against the full corpus.
-    Returns (intent, best_index, score) or ("unknown", ...)
-    """
+
     processed = preprocess_text(user_input, stemmer, stop_words)
     counts = vectorizer.transform([processed])
     tfidf = transformer.transform(counts)

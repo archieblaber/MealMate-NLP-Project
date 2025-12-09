@@ -2,7 +2,6 @@
 
 from state import ConversationState
 
-# Reuse the same filler words as shopping_add
 FILLER_WORDS = {
     "add", "put", "to", "my", "the", "on", "in", "into", "and",
     "shopping", "list", "that", "this", "recipe", "for", "of",
@@ -27,12 +26,6 @@ def _extract_dislike_phrases(user_text):
 
 
 def handle_add_dislike(user_text, state):
-    """
-    Handles input like:
-    - "I don't like mushrooms"
-    - "avoid peanuts and prawns"
-    - "no beef or lamb"
-    """
 
     dislikes = _extract_dislike_phrases(user_text)
 
@@ -40,9 +33,9 @@ def handle_add_dislike(user_text, state):
         return (
             "I'm not sure what ingredient you want to avoid.\n"
             "You can say things like:\n"
-            "• \"I don't like mushrooms\"\n"
-            "• \"avoid peanuts and prawns\"\n"
-            "• \"no beef please\""
+            "- \"I don't like mushrooms\"\n"
+            "- \"avoid peanuts and prawns\"\n"
+            "- \"no beef please\""
         )
 
     added = []

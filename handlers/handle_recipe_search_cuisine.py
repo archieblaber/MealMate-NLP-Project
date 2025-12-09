@@ -1,27 +1,25 @@
-# handlers/handle_recipe_search_ingredient.py
+# handlers/handle_recipe_search_cuisine.py
 
+from random import randint
 from recipe_manager import RecipeManager
 from state import ConversationState
-from random import randint
 from recipe_summary_templates import RECIPE_SUMMARY_TEMPLATES
 
 
-def handle_recipe_search_ingredient(user_text, state, recipe_manager):
+def handle_recipe_search_cuisine(user_text, state, recipe_manager):
 
-    recipes = recipe_manager.search_by_ingredient(user_text, state)
+    recipes = recipe_manager.search_by_cuisine(user_text, state)
 
     if not recipes:
         return (
-            "I couldn't find any recipes matching that ingredient, given your preferences.\n"
-            "Try mentioning a clearer ingredient, like 'beef', 'pasta', or 'tofu'."
+            "I couldn't find any recipes for that cuisine, given your preferences.\n"
+            "Try mentioning a cuisine like 'Italian', 'Indian', or 'Mexican'."
         )
-    
+
     recipe_index = randint(0, len(recipes) - 1)
 
     state.last_recipe_list = recipes
-
     state.last_recipe_index = recipe_index
-
     top_recipe = state.last_recipe = recipes[recipe_index]
 
     row = recipe_manager.get_recipe_by_name(top_recipe)
@@ -34,7 +32,7 @@ def handle_recipe_search_ingredient(user_text, state, recipe_manager):
         name=top_recipe,
         difficulty=difficulty,
         cuisine=cuisine,
-        time=time_min
+        time=time_min,
     )
 
     lines = []

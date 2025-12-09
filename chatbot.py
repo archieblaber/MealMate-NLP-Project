@@ -13,6 +13,8 @@ from handlers.handle_shopping_clear import handle_shopping_clear
 from handlers.handle_shopping_remove import handle_shopping_remove
 from handlers.handle_add_dislike import handle_add_dislike
 from handlers.handle_set_diet import handle_set_diet
+from handlers.handle_recipe_search_cuisine import handle_recipe_search_cuisine
+from handlers.handle_recipe_search_quick import handle_recipe_search_quick
 from handlers.handle_help import handle_help
 from handlers.handle_shopping_place_order import handle_shopping_place_order
 from handlers.handle_show_prefs import handle_show_prefs
@@ -27,17 +29,14 @@ from intent_model import (
 
 
 def main():
-    # Load small talk corpus
     df = load_full_corpus()
     state = ConversationState()
     recipe_manager = RecipeManager("recipes.csv")
 
-    # Build or load vectoriser/transformer
     vectorizer, transformer = load_vectorizer_and_transformer()
     if vectorizer is None or transformer is None:
         vectorizer, transformer, corpus_tfidf = build_vectorizer_and_transformer(df)
     else:
-        # Need to rebuild corpus_tfidf from the current corpus
         stemmer, stop_words = create_stemmer_and_stopwords()
         processed_questions = [
             preprocess_text(q, stemmer, stop_words)
@@ -50,25 +49,37 @@ def main():
     answers = df["Answer"].astype(str).tolist()
     intents = df["Intent"].tolist()
 
-    # NLP tools for runtime
     stemmer, stop_words = create_stemmer_and_stopwords()
 
-    # Username handshake
-    print("Hi, I'm the skeleton small talk chatbot.")
+    print("Hi, I'm MealMate - your recipe and shopping assistant.")
 
     while state.username is None:
-        name_try = input("What should I call you? ").strip()
+        name_try = input("MealMate: What should I call you? ").strip()
         if not name_try:
-            print("I didn't catch that, try again.")
+            print("MealMate: I didn't catch that, try again.")
             continue
-        confirm = input(f"Did you say '{name_try}'? (y/n) ").strip().lower()
+        confirm = input(f"MealMate: Did you say '{name_try}'? (y/n) ").strip().lower()
         if confirm in ("y", "yes"):
             state.username = name_try
         else:
-            print("Okay, let's try again.")
+            print("MealMate: Okay, let's try again.")
 
-    print(f"Nice to meet you, {state.username}!")
-    print("Right now I can have small talk. Ask me something (type 'quit' to exit).")
+    print(f"MealMate: Nice to meet you, {state.username}!")
+    print(
+        "MealMate: Here's what I can help you with:\n"
+        "- Find recipes based on ingredients, cuisine, diet, or cooking time.\n"
+        "- Show more details for a recipe and give you personalised notes.\n"
+        "- Remember your dietary preferences (e.g. vegan, gluten free).\n"
+        "- Remember ingredients you dislike and avoid them in suggestions.\n"
+        "- Build, show, update, and clear a shopping list from recipes or free-form items.\n"
+        "- Do a bit of small talk (hello, how are you, etc.).\n"
+        "\nYou can try asking things like:\n"
+        '  - "show me some vegan recipes"\n'
+        '  - "what can I cook with chicken"\n'
+        '  - "add that recipe to my shopping list"\n'
+        '  - "what are my dietary preferences"\n'
+        "\nType \"help\" at any time to see this again, or \"quit\" to exit."
+    )
 
     # Main chat loop
     while True:
@@ -90,18 +101,15 @@ def main():
             stop_words,
         )
 
-        # proto_q = questions[idx]
-        # print(f"[DEBUG] intent={intent}  score={score:.3f}")
-        # print(f"[DEBUG] matched prototype: \"{proto_q}\"")
-
         if intent == "unknown":
             print("MealMate: I'm not confident I understand that yet.")
             continue
 
         state.last_intent = intent
 
-        # Use templates if we have them
         if intent in SMALLTALK_TEMPLATES:
+            if intent == "my_name_is":
+                state.username = user_input.split()[-1]
             template = random.choice(SMALLTALK_TEMPLATES[intent])
             response = template.replace("{name}", state.username)
             print("MealMate:", response)
@@ -111,7 +119,14 @@ def main():
             response = handle_recipe_search_ingredient(user_input, state, recipe_manager)
             print("MealMate:", response)
             continue
-
+        if intent == "recipe_search_cuisine":
+            response = handle_recipe_search_cuisine(user_input, state, recipe_manager)
+            print("MealMate:", response)
+            continue
+        if intent == "recipe_search_quick":
+            response = handle_recipe_search_quick(user_input, state, recipe_manager)
+            print("MealMate:", response)
+            continue
         if intent == "recipe_details":
             response = handle_recipe_details(state, recipe_manager)
             print("MealMate:", response)
@@ -152,6 +167,10 @@ def main():
             continue
         if intent == "set_diet":
             response = handle_set_diet(user_input, state)
+            print("MealMate:", response)
+            continue
+        if intent == "change_name":
+            response = handle_change_name(user_input, state)
             print("MealMate:", response)
             continue
         if intent == "help":
