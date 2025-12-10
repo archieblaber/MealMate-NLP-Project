@@ -6,14 +6,16 @@ from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
 
 
-def ensure_nltk():
+def ensure_nltk(): 
+    # makes sure nltk libraries work
     try:
         stopwords.words("english")
     except LookupError:
         nltk.download("stopwords")
 
 
-def create_stemmer_and_stopwords():
+def create_stemmer_and_stopwords(): 
+    # creates stemmer and stopword set
     ensure_nltk()
     stemmer = PorterStemmer()
     stop_words = set(stopwords.words("english"))
@@ -22,6 +24,7 @@ def create_stemmer_and_stopwords():
 
 
 def preprocess_text(text, stemmer, stop_words):
+    # stems and removes stop words from text
     text = text.lower()
     tokens = re.findall(r"[a-z]+", text)
 

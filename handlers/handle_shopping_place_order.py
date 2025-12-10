@@ -15,6 +15,7 @@ def handle_shopping_place_order(state):
             seen.add(item)
             unique_items.append(item)
 
+    # builds items_text with shopping list values to confirm with user
     if len(unique_items) == 1:
         items_text = f"- {unique_items[0]}"
     else:
@@ -22,13 +23,22 @@ def handle_shopping_place_order(state):
         items_text = "\n".join(items_text_lines)
 
     lines = []
-    lines.append("Okay, I'll place this order for you:")
-    lines.append("")
-    lines.append(items_text)
-    lines.append("")
-    lines.append("If you want, you can now say:")
-    lines.append("- \"clear my shopping list\"")
-    lines.append("- \"show me my shopping list\"")
-    lines.append("- \"find me another recipe\"")
+    print("MealMate: Okay, here's the order I'm about to place:")
+    print()
+    print(items_text)
+    print()
+    
+    while True:
+        confirm = input("MealMate: Do you want me to place this order now? (y/n) ").strip().lower() # confirmation with user before ordering
+        if confirm in ("y", "yes"):
+            state.shopping_list = []
+            return (
+                "Great, your order has been placed and "
+                "I've cleared your shopping list."
+            )
+        elif confirm in ("n", "no"):
+            return "Okay, I won't place the order yet."
+        else:
+            print('MealMate: Please answer with "y" or "n".')
 
     return "\n".join(lines)

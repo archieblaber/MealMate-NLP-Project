@@ -1,6 +1,8 @@
 # chatbot.py
 
 import random
+import nltk
+
 
 from state import ConversationState
 from corpus import load_full_corpus
@@ -11,6 +13,7 @@ from handlers.handle_shopping_add import handle_shopping_add
 from handlers.handle_shopping_show import handle_shopping_show
 from handlers.handle_shopping_clear import handle_shopping_clear
 from handlers.handle_shopping_remove import handle_shopping_remove
+from handlers.handle_how_are_you import handle_how_are_you
 from handlers.handle_add_dislike import handle_add_dislike
 from handlers.handle_set_diet import handle_set_diet
 from handlers.handle_recipe_search_cuisine import handle_recipe_search_cuisine
@@ -27,9 +30,12 @@ from intent_model import (
     match_intent,
 )
 
+nltk.download("vader_lexicon")
+
 
 def main():
     df = load_full_corpus()
+    LOW_CONF_THRESHOLD = 0.6 # threshold under which clarification will be needed
     state = ConversationState()
     recipe_manager = RecipeManager("recipes.csv")
 
@@ -74,7 +80,7 @@ def main():
         "- Build, show, update, and clear a shopping list from recipes or free-form items.\n"
         "- Do a bit of small talk (hello, how are you, etc.).\n"
         "\nYou can try asking things like:\n"
-        '  - "show me some vegan recipes"\n'
+        '  - "show me some quick recipes"\n'
         '  - "what can I cook with chicken"\n'
         '  - "add that recipe to my shopping list"\n'
         '  - "what are my dietary preferences"\n'
@@ -102,14 +108,37 @@ def main():
         )
 
         if intent == "unknown":
-            print("MealMate: I'm not confident I understand that yet.")
+            print("MealMate: I'm not confident I understand that yet.\n"
+                  "\nYou can try asking things like:\n"
+        '  - "show me some quick recipes"\n'
+        '  - "what can I cook with chicken"\n'
+        '  - "add that recipe to my shopping list"\n'
+        '  - "what are my dietary preferences"\n'
+            )
             continue
+
+        # clarify what the user meant, score value is between 0.15 and 0.6
+        if score < LOW_CONF_THRESHOLD:
+            guess_text = questions[idx]
+            print(
+                f"MealMate: I'm not completely sure what you meant.\n"
+                f"My best guess is something like: \"{guess_text}\" "
+            )
+            confirm = input("MealMate: Should I go ahead with this? (y/n) ").strip().lower()
+            if confirm not in ("y", "yes"):
+                print("MealMate: Okay, please rephrase your request or try a different wording.")
+                continue
 
         state.last_intent = intent
 
+        # match intents with handlers:
         if intent in SMALLTALK_TEMPLATES:
             if intent == "my_name_is":
                 state.username = user_input.split()[-1]
+            if intent == "how_are_you":
+                response = handle_how_are_you(state)
+                print("MealMate:", response)
+                continue
             template = random.choice(SMALLTALK_TEMPLATES[intent])
             response = template.replace("{name}", state.username)
             print("MealMate:", response)

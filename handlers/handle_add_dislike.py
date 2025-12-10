@@ -2,6 +2,7 @@
 
 from state import ConversationState
 
+# words to ignore when looking for ingredients in user text
 FILLER_WORDS = {
     "add", "put", "to", "my", "the", "on", "in", "into", "and",
     "shopping", "list", "that", "this", "recipe", "for", "of",
@@ -9,7 +10,9 @@ FILLER_WORDS = {
     "no", "not", "i", "like", "prefer", "avoid", "avoidance"
 }
 
-
+# replaces and with , then splits the input on ,
+# makes a new list of tokens from the user input only if they are not in the filler words set and their length > 2
+# returns ingredients found as a list
 def _extract_dislike_phrases(user_text):
     text = user_text.lower().replace(" and ", ",")
     segments = text.split(",")
@@ -43,10 +46,10 @@ def handle_add_dislike(user_text, state):
 
     for ing in dislikes:
         if ing in state.disliked_ingredients:
-            already.append(ing)
+            already.append(ing) # build list of ingredients that were already disliked for output
         else:
             state.disliked_ingredients.add(ing)
-            added.append(ing)
+            added.append(ing) # builds list of newly disliked ingredients for output
 
     response_lines = []
 

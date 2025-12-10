@@ -1,0 +1,156 @@
+utterance,expected_intent
+what can i cook with chicken,recipe_search_ingredient
+what can i cook with chicken for dinner,recipe_search_ingredient
+give me recipes using chicken,recipe_search_ingredient
+show me dishes with chicken,recipe_search_ingredient
+i only have chicken what can i cook,recipe_search_ingredient
+any ideas with chicken for dinner,recipe_search_ingredient
+what can i cook with beef,recipe_search_ingredient
+what can i cook with pasta,recipe_search_ingredient
+what can i cook with tofu,recipe_search_ingredient
+what can i cook with mushrooms,recipe_search_ingredient
+show me recipes with prawns,recipe_search_ingredient
+what can i cook with leftover rice,recipe_search_ingredient
+show me recipes with eggs,recipe_search_ingredient
+show me recipes with tomatoes,recipe_search_ingredient
+show me recipes with potatoes,recipe_search_ingredient
+what can i cook with broccoli,recipe_search_ingredient
+show me recipes with salmon,recipe_search_ingredient
+show me recipes with bacon,recipe_search_ingredient
+what can i cook with mince,recipe_search_ingredient
+show me recipes with lentils,recipe_search_ingredient
+show me recipes with spinach,recipe_search_ingredient
+show me recipes with chickpeas,recipe_search_ingredient
+show me recipes with courgette,recipe_search_ingredient
+show me recipes with peppers,recipe_search_ingredient
+show me recipes with sweetcorn,recipe_search_ingredient
+i need a quick dinner under 20 minutes,recipe_search_quick
+show me easy meals i can cook fast,recipe_search_quick
+what can i make in 15 20 minutes,recipe_search_quick
+show me a quick recipe,recipe_search_quick
+show me a quick dinner in 10 minutes,recipe_search_quick
+show me super fast meals,recipe_search_quick
+i want a quick meal to cook,recipe_search_quick
+show me recipes that take less than 20 minutes,recipe_search_quick
+what can i make in under 20 minutes,recipe_search_quick
+quick weekday dinner ideas please,recipe_search_quick
+show me quick lunch recipes,recipe_search_quick
+show me fast recipes for busy nights,recipe_search_quick
+show me something i can cook really quickly,recipe_search_quick
+show me a speedy pasta recipe,recipe_search_quick
+show me a quick stir fry recipe,recipe_search_quick
+show me simple quick meals,recipe_search_quick
+show me italian recipes,recipe_search_cuisine
+show me chinese recipes,recipe_search_cuisine
+show me mexican recipes,recipe_search_cuisine
+i fancy something indian,recipe_search_cuisine
+have you got any mexican dishes,recipe_search_cuisine
+recommend a japanese dinner,recipe_search_cuisine
+give me some thai recipes,recipe_search_cuisine
+show me italian food recipes,recipe_search_cuisine
+show me indian curry recipes,recipe_search_cuisine
+show me chinese style recipes,recipe_search_cuisine
+i want a japanese noodle recipe,recipe_search_cuisine
+show me thai curry recipes,recipe_search_cuisine
+give me spanish tapas recipes,recipe_search_cuisine
+show me greek recipes,recipe_search_cuisine
+show me lebanese recipes,recipe_search_cuisine
+show me moroccan style dinners,recipe_search_cuisine
+show me korean recipes,recipe_search_cuisine
+show me turkish food recipes,recipe_search_cuisine
+add the ingredients for that recipe to my shopping list,shopping_add
+add milk to my shopping list,shopping_add
+add apples and bananas to my shopping list,shopping_add
+add chicken to my shopping list,shopping_add
+add pasta and sauce to my shopping list,shopping_add
+add eggs to my shopping list,shopping_add
+add onions garlic and peppers to my shopping list,shopping_add
+add olive oil and salt to my shopping list,shopping_add
+add that recipe to my shopping list,shopping_add
+add all the ingredients to my shopping list,shopping_add
+add tomatoes to my shopping list,shopping_add
+add bread and butter to my shopping list,shopping_add
+add cheese to my shopping list,shopping_add
+add rice beans and salsa to my shopping list,shopping_add
+show me my shopping list,shopping_show
+what is on my shopping list,shopping_show
+list my ingredients to buy,shopping_show
+what have i added to my shopping list,shopping_show
+show my current shopping list,shopping_show
+remind me what is on the shopping list,shopping_show
+display my shopping list,shopping_show
+what items are on my grocery list,shopping_show
+clear my shopping list,shopping_clear
+empty my shopping list,shopping_clear
+remove everything from my shopping list,shopping_clear
+clear all items from my shopping list,shopping_clear
+wipe my shopping list,shopping_clear
+remove milk from my shopping list,shopping_remove
+take apples off my shopping list,shopping_remove
+remove cheese from my shopping list,shopping_remove
+delete bread from my shopping list,shopping_remove
+take onions and garlic off my shopping list,shopping_remove
+place my grocery order,shopping_place_order
+i am ready to order my shopping,shopping_place_order
+checkout my shopping list,shopping_place_order
+submit my shopping basket now,shopping_place_order
+order everything on my shopping list,shopping_place_order
+i am vegetarian,set_diet
+i am vegan,set_diet
+from now on i need gluten free food,set_diet
+my diet is high protein,set_diet
+remember that i am vegetarian,set_diet
+remember that i am vegan,set_diet
+i am lactose intolerant,set_diet
+mark me as gluten free,set_diet
+consider me pescatarian from now on,set_diet
+i do not like mushrooms,add_dislike
+please avoid peanuts in my recipes,add_dislike
+i hate olives,add_dislike
+do not show me recipes with prawns,add_dislike
+i really dislike broccoli,add_dislike
+never suggest dishes with lamb,add_dislike
+avoid coriander in my meals,add_dislike
+do not give me anything with blue cheese,add_dislike
+what are my dietary preferences,show_prefs
+what diet did i tell you i follow,show_prefs
+what ingredients do you know i do not like,show_prefs
+remind me of my preferences,show_prefs
+what do you remember about my diet,show_prefs
+show me another recipe like that,recipe_more
+give me a different option,recipe_more
+another,recipe_more
+give me another one,recipe_more
+next recipe,recipe_more
+can i have more ideas,recipe_more
+show me a different recipe suggestion,recipe_more
+give me a new recipe from that list,recipe_more
+tell me more about that recipe,recipe_details
+show me the details again,recipe_details
+what is in that recipe,recipe_details
+give me the full instructions for that recipe,recipe_details
+show me ingredients and method for that dish,recipe_details
+how do i use this chatbot,help
+what can you do for me,help
+help,help
+what kind of things can i ask you,help
+show me examples of what i can say,help
+hello,greeting
+hi,greeting
+hey,greeting
+hi there,greeting
+good evening,greeting
+good morning,greeting
+how are you,how_are_you
+how's it going,how_are_you
+how are you doing,how_are_you
+thank you,thanks
+thanks,thanks
+cheers,thanks
+what is my name,what_is_my_name
+do you remember my name,what_is_my_name
+what is your name,what_is_your_name
+who are you,what_is_your_name
+call me archie,my_name_is
+my name is archie,my_name_is
+you can call me alex,my_name_is

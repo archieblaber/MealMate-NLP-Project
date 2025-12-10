@@ -5,7 +5,7 @@ def handle_set_diet(user_text, state):
     text = user_text.lower()
     found = set()
 
-
+    # looks for dietary keywords in user input since there are limited options, matches them and builds a list of requirements it found
     if "vegan" in text:
         found.add("vegan")
 
@@ -24,7 +24,7 @@ def handle_set_diet(user_text, state):
     if "low carb" in text or "keto" in text:
         found.add("low carb")
 
-    if not found:
+    if not found: # didn't find any keywords
         return (
             "I couldn't see a clear dietary preference in that.\n"
             "You can say things like:\n"
@@ -37,8 +37,8 @@ def handle_set_diet(user_text, state):
     if state.dietary_pref is None:
         state.dietary_pref = set()
 
-
-    before = set(state.dietary_pref)
+    # saves state before to compare to after to see if any changes have occured and respond accordingly
+    before = set(state.dietary_pref) 
     state.dietary_pref.update(found)
     after = state.dietary_pref
 

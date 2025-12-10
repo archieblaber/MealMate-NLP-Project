@@ -6,13 +6,15 @@ from recipe_detail_notes import build_recipe_notes
 
 
 def handle_recipe_details(state, recipe_manager):
-    if not state.last_recipe:
+    # user hasn't asked for a recipe yet
+    if not state.last_recipe: 
         return (
             "I don't have a recipe in mind yet.\n"
             "First ask me to find you something to cook, "
             "then you can say 'tell me more about that recipe'."
         )
 
+    # get the whole row of data for the most recent recipe
     row = recipe_manager.get_recipe_by_name(state.last_recipe)
     notes = build_recipe_notes(row)
     if row is None:
@@ -20,7 +22,8 @@ def handle_recipe_details(state, recipe_manager):
             "Sorry, I couldn't find the full details for that recipe.\n"
             "Try asking me for another recipe."
         )
-
+    
+    # extract data from recipe row
     name = row["recipe_name"]
     ingredients = row["ingredients"]
     instructions = row["instructions"]
@@ -29,6 +32,7 @@ def handle_recipe_details(state, recipe_manager):
     cuisine = row["cuisine"]
     tags = row["tags"]
 
+    # build return for recipe details
     lines = []
     lines.append("")
     lines.append("--------------------------------------------------------------")

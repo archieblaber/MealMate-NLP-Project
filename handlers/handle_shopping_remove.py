@@ -11,7 +11,7 @@ def handle_shopping_remove(user_text, state):
         )
 
     text = user_text.lower()
-    text_words = set(text.split())
+    text_words = set(text.split()) # splits user input into a set
 
     items_to_remove = set()
 
@@ -19,11 +19,12 @@ def handle_shopping_remove(user_text, state):
         item_lower = item.lower()
         item_tokens = [t for t in item_lower.split() if len(t) > 2] 
 
-        if any(tok in text_words for tok in item_tokens):
-            items_to_remove.add(item)
+        if any(tok in text_words for tok in item_tokens): # if even one word in the input text is in a shopping list item remove it
+            items_to_remove.add(item) # builds a list of items to remove if a 
 
     if not items_to_remove:
 
+        # builds user response
         if len(state.shopping_list) == 1:
             current = f"- {state.shopping_list[0]}"
         else:

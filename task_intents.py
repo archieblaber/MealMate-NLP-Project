@@ -2,6 +2,7 @@
 
 import pandas as pd
 
+# intents for tasks
 
 def build_task_intents_dataframe():
     rows = [
@@ -138,6 +139,36 @@ def build_task_intents_dataframe():
         },
         {
             "Question": "give me some Thai recipes",
+            "Answer": "",
+            "Intent": "recipe_search_cuisine",
+        },
+        {
+            "Question": "give me some Spanish recipes",
+            "Answer": "",
+            "Intent": "recipe_search_cuisine",
+        },
+        {
+            "Question": "give me some Japanese recipes",
+            "Answer": "",
+            "Intent": "recipe_search_cuisine",
+        },
+        {
+            "Question": "give me some Greek recipes",
+            "Answer": "",
+            "Intent": "recipe_search_cuisine",
+        },
+        {
+            "Question": "give me some Korean recipes",
+            "Answer": "",
+            "Intent": "recipe_search_cuisine",
+        },
+        {
+            "Question": "give me some Turkish recipes",
+            "Answer": "",
+            "Intent": "recipe_search_cuisine",
+        },
+        {
+            "Question": "give me some Moroccan recipes",
             "Answer": "",
             "Intent": "recipe_search_cuisine",
         },
@@ -286,6 +317,16 @@ def build_task_intents_dataframe():
             "Answer": "",
             "Intent": "add_dislike",
         },
+        {
+            "Question": "never suggest dishes with",
+            "Answer": "",
+            "Intent": "add_dislike",
+        },
+        {
+            "Question": "do not give me anything with",
+            "Answer": "",
+            "Intent": "add_dislike",
+        },
 
         # =========================
         # USER PROFILE - SHOW PREFERENCES
@@ -360,6 +401,22 @@ def build_task_intents_dataframe():
         },
         {
             "Question": "what can you do for me",
+            "Answer": "",
+            "Intent": "help",
+        },
+        {
+            "Question": "help",
+            "Answer": "",
+            "Intent": "help",
+        },
+        {
+            "Question": "what kind of things can i ask you",
+            "Answer": "",
+            "Intent": "help",
+            
+        },
+        {
+            "Question": "show me examples of what i can ask you",
             "Answer": "",
             "Intent": "help",
         },

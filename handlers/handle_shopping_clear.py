@@ -12,7 +12,7 @@ def handle_shopping_clear(state):
             "- \"add that recipe to my shopping list\""
         )
 
-    state.shopping_list.clear()
+    state.shopping_list.clear() # clears entire shopping list
 
     return (
         "I've cleared your shopping list.\n"

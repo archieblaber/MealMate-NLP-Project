@@ -2,21 +2,23 @@
 
 from state import ConversationState
 
-
+# words to ignore when looking for ingredients in user text
 FILLER_WORDS = {
     "add", "put", "to", "my", "the", "on", "in", "into", "and",
     "shopping", "list", "that", "this", "recipe", "for", "of",
     "please", "can", "you"
 }
 
-
+# replaces and with , then splits the input on ,
+# makes a new list of tokens from the user input only if they are not in the filler words set and their length > 2
+# returns ingredients found as a list
 def _extract_freeform_ingredients(user_text):
     text = user_text.lower().replace(" and ", ",")
-    raw_segments = text.split(",")
+    segments = text.split(",")
     freeform = []
 
-    for segment in raw_segments:
-        tokens = segment.strip().split()
+    for seg in segments:
+        tokens = seg.strip().split()
         filtered_tokens = [t for t in tokens if t not in FILLER_WORDS and len(t) > 2]
         phrase = " ".join(filtered_tokens)
         if phrase and phrase not in freeform:
@@ -32,10 +34,10 @@ def _add_items_to_shopping_list(items, state):
     added_count = 0
     for ing in items:
         if ing not in state.shopping_list:
-            state.shopping_list.append(ing)
+            state.shopping_list.append(ing) # add to shopping list
             added_count += 1
 
-    preview = ", ".join(state.shopping_list[-min(5, len(state.shopping_list)):])
+    preview = ", ".join(state.shopping_list[-min(5, len(state.shopping_list)):]) #preview at most 5 items after adding
     return added_count, preview
 
 
@@ -55,7 +57,7 @@ def _add_full_recipe_to_list(state, recipe_manager):
         )
 
     raw_ingredients = row["ingredients"]
-    ingredients = [ing.strip() for ing in raw_ingredients.split(";") if ing.strip()]
+    ingredients = [ing.strip() for ing in raw_ingredients.split(";") if ing.strip()] # makes a new list by splitting on semi-colons and stripping output
 
     added_count, preview = _add_items_to_shopping_list(ingredients, state)
 
@@ -69,7 +71,7 @@ def _add_full_recipe_to_list(state, recipe_manager):
         f"I've added the ingredients for **{state.last_recipe}** to your shopping list "
         f"({added_count} new item{'s' if added_count != 1 else ''}).\n"
         f"Recent items on your list: {preview}\n"
-        'You can say "show me my shopping list" to see everything.'
+        'You can say "show me my shopping list" to see everything or "place my shopping order" if you are ready to order.'
     )
 
 
@@ -92,7 +94,7 @@ def handle_shopping_add(user_text, state, recipe_manager):
             f"{'s' if added_count != 1 else ''} to your shopping list "
             f"({', '.join(items_to_add)}).\n"
             f"Recent items on your list: {preview}\n"
-            'You can say "show me my shopping list" to see everything.'
+            'You can say "show me my shopping list" to see everything or "place my shopping order" if you are ready to order.'
         )
 
     if state.last_recipe:

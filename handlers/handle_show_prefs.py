@@ -4,6 +4,7 @@ def handle_show_prefs(state):
     has_diet = bool(state.dietary_pref)
     has_dislikes = bool(state.disliked_ingredients)
 
+    # builds response to show user current preferences
     if not has_diet and not has_dislikes:
         return (
             "I don't have any dietary preferences or dislikes saved yet.\n"

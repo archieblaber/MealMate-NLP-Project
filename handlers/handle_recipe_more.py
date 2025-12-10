@@ -16,24 +16,27 @@ def handle_recipe_more(state, recipe_manager):
 
     recipes = state.last_recipe_list
 
-    current_idx = state.last_recipe_index or 0
-    next_idx = (current_idx + 1) % len(recipes)
+    current_idx = state.last_recipe_index or 0 # wraps round if needed
+    next_idx = (current_idx + 1) % len(recipes) # selects a new random recipe
 
+    # updates convo state
     state.last_recipe_index = next_idx
     state.last_recipe = recipes[next_idx]
     recipe_name = state.last_recipe
 
-    row = recipe_manager.get_recipe_by_name(recipe_name)
+    row = recipe_manager.get_recipe_by_name(recipe_name) # gets recipe row
     if row is None:
         return (
             "I couldn't load the details for the next recipe.\n"
             "Try asking me for a new recipe search."
         )
-
+    
+    # extracts details from recipe row
     difficulty = row["difficulty"]
     cuisine = row["cuisine"]
     time_min = row["time_to_cook_min"]
 
+    # builds return response
     template = RECIPE_SUMMARY_TEMPLATES[
         randint(0, len(RECIPE_SUMMARY_TEMPLATES) - 1)
     ]

@@ -2,7 +2,7 @@
 
 from state import ConversationState
 
-
+# returns a big comprehensive list of things MealMate is capable of
 def handle_help(state):
     name = state.username or "there"
 

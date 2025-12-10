@@ -18,7 +18,7 @@ def handle_shopping_show(state):
     lines.append("")
 
     for i, item in enumerate(state.shopping_list, start=1):
-        lines.append(f"{i}. {item}")
+        lines.append(f"{i}. {item}") # builds output to show user shopping list
 
     lines.append("")
     lines.append(

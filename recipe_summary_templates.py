@@ -1,5 +1,7 @@
 # recipe_summary_templates.py
 
+# different summary templates for lexical variation
+
 RECIPE_SUMMARY_TEMPLATES = [
     "How about {name}? It's a {difficulty} difficulty, {cuisine} meal that takes about {time} minutes.",
     "{name} could work - a {difficulty} difficulty, {cuisine} recipe in roughly {time} minutes.",

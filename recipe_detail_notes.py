@@ -2,6 +2,8 @@
 
 import random
 
+# varied notes for responses for lexical variation
+
 TAG_NOTE_OPTIONS = {
     "high protein": [
         "It's a great choice if you're looking to boost protein.",
