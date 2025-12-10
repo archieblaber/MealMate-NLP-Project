@@ -33,7 +33,7 @@ def load_model_and_corpus():
     return vectorizer, transformer, corpus_tfidf, intents, stemmer, stop_words
 
 
-def load_test_cases(path="intent_test_500.csv"):
+def load_test_cases(path="intent_test_155.csv"):
     cases = []
     with open(path, newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f)
@@ -71,10 +71,6 @@ def main():
             per_intent_correct[expected] += 1
         per_intent[expected] += 1
 
-        # Optional: comment this out if too spammy
-        # status = "OK " if ok else "ERR"
-        # print(f"[{status}] '{utterance}' -> predicted={predicted}, "
-        #       f"expected={expected}, score={score:.3f}")
 
     total = len(cases)
     overall_acc = correct / total if total else 0.0
